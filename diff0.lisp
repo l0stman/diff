@@ -1,4 +1,4 @@
-(defun common-subseq (f1 f2)
+(defun com-seq (f1 f2)
   "Find the indexes of the longest common subsequence between the
 files f1 and f2 represented as arrays.  This algorithm is O(mn)."
   (labels ((iter (i j)
@@ -20,18 +20,6 @@ files f1 and f2 represented as arrays.  This algorithm is O(mn)."
       (cons (cons (1+ len1) (1+ len2))
             (iter (1- len1) (1- len2)))))))
 
-(defun delta (seq)
-  "Transform the indexes of the longest common subsequence into
-notation using `a' for append, `d' for delete and `c' for change."
-  (loop for ((i1 . j1) (i2 . j2)) on seq
-     when (and i2 (or (/= (1+ i1) i2) (/= (1+ j1) j2)))
-     collect (cond ((= (1+ i1) i2)
-                    (list 'a i1 (1+ j1) (1- j2)))
-                   ((= (1+ j1) j2)
-                    (list 'd (1+ i1) (1- i2) j1))
-                   (t
-                    (list 'c (1+ i1) (1- i2) (1+ j1) (1- j2))))))
-
 (defmacro aif (pred then &optional else)
   `(let ((it ,pred))
      (if it ,then ,else)))
@@ -46,24 +34,29 @@ notation using `a' for append, `d' for delete and `c' for change."
 (defun diff (file1 file2)
   (let ((f1 (file->arr file1))
         (f2 (file->arr file2)))
-   (flet ((print-range (f min max sym)
-            (loop for i from (1- min) to (1- max)
-               do (format t "~A ~A~%" sym (aref f i)))))
-     (dolist (d (delta (common-subseq f1 f2)))
-       (case (car d)
-         (a (let ((min (third d))
-                  (max (fourth d)))
-              (format t "~Da~D,~D~%" (second d) min max)
-              (print-range f2 min max '>)))
-         (d (let ((min (second d))
-                  (max (third d)))
-              (format t "~D,~Dd~D~%" min max (fourth d))
-              (print-range f1 min max '<)))
-         (c (let ((min1 (second d))
-                  (max1 (third d))
-                  (min2 (fourth d))
-                  (max2 (fifth d)))
-              (format t "~D,~Dc~D,~D~%" min1 max1 min2 max2)
-              (print-range f1 min1 max1 '<)
-              (format t "---~%")
-              (print-range f2 min2 max2 '>))))))))
+    (flet ((print-lines (file from to prefix)
+             (loop for i from (1- from) to (1- to)
+                do (format t "~C ~A~%" prefix (aref file i))))
+           (print-header (cmd from1 to1 from2 to2)
+             (format t "~D~@[,~D~]~C~D~@[,~D~]~%"
+                     from1
+                     (when (< from1 to1) to1)
+                     cmd
+                     from2
+                     (when (< from2 to2) to2))))
+      (loop for ((pos1 . pos2) (next1 . next2)) on (com-seq f1 f2)
+         when next1
+         do
+         (cond ((= (1+ pos1) next1)
+                (when (< (1+ pos2) next2)
+                  (print-header #\a pos1 pos1 (1+ pos2) (1- next2))
+                  (print-lines f2 (1+ pos2) (1- next2) #\>)))
+               ((= (1+ pos2) next2)
+                (when (< (1+ pos1) next1)
+                  (print-header #\d (1+ pos1) (1- next1) pos2 pos2)
+                  (print-lines f1 (1+ pos1) (1- next1) #\<)))
+               (t
+                (print-header #\c (1+ pos1) (1- next1) (1+ pos2) (1- next2))
+                (print-lines f1 (1+ pos1) (1- next1) #\<)
+                (format t "---~%")
+                (print-lines f2 (1+ pos2) (1- next2) #\>)))))))

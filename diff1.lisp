@@ -152,4 +152,3 @@
                 (print-lines f1 (1+ pos1) (1- next1) #\<)
                 (format t "---~%")
                 (print-lines f2 (1+ pos2) (1- next2) #\>)))))))
-
