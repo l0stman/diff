@@ -136,20 +136,20 @@
                      cmd
                      from2
                      (when (< from2 to2) to2))))
-      (loop for ((i1 . j1) (i2 . j2)) on (com-seq f1 f2)
-         when i2
+      (loop for ((pos1 . pos2) (next1 . next2)) on (com-seq f1 f2)
+         when next1
          do
-         (cond ((= (1+ i1) i2)
-                (when (< (1+ j1) j2)
-                  (print-header #\a i1 i1 (1+ j1) (1- j2))
-                  (print-lines f2 (1+ j1) (1- j2) #\>)))
-               ((= (1+ j1) j2)
-                (when (< (1+ i1) i2)
-                  (print-header #\d (1+ i1) (1- i2) j1 j1)
-                  (print-lines f1 (1+ i1) (1- i2) #\<)))
+         (cond ((= (1+ pos1) next1)
+                (when (< (1+ pos2) next2)
+                  (print-header #\a pos1 pos1 (1+ pos2) (1- next2))
+                  (print-lines f2 (1+ pos2) (1- next2) #\>)))
+               ((= (1+ pos2) next2)
+                (when (< (1+ pos1) next1)
+                  (print-header #\d (1+ pos1) (1- next1) pos2 pos2)
+                  (print-lines f1 (1+ pos1) (1- next1) #\<)))
                (t
-                (print-header #\c (1+ i1) (1- i2) (1+ j1) (1- j2))
-                (print-lines f1 (1+ i1) (1- i2) #\<)
+                (print-header #\c (1+ pos1) (1- next1) (1+ pos2) (1- next2))
+                (print-lines f1 (1+ pos1) (1- next1) #\<)
                 (format t "---~%")
-                (print-lines f2 (1+ j1) (1- j2) #\>)))))))
+                (print-lines f2 (1+ pos2) (1- next2) #\>)))))))
 
