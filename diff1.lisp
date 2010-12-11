@@ -130,13 +130,12 @@
              (loop for i from (1- from) to (1- to)
                 do (format t "~C ~A~%" prefix (aref file i))))
            (print-header (cmd from1 to1 from2 to2)
-             (princ from1)
-             (when (< from1 to1)
-               (format t ",~D" to1))
-             (format t "~C~D" cmd from2)
-             (when (< from2 to2)
-               (format t ",~D" to2))
-             (terpri)))
+             (format t "~D~@[,~D~]~C~D~@[,~D~]~%"
+                     from1
+                     (when (< from1 to1) to1)
+                     cmd
+                     from2
+                     (when (< from2 to2) to2))))
       (loop for ((i1 . j1) (i2 . j2)) on (com-seq f1 f2)
          when i2
          do
