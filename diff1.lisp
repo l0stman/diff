@@ -68,19 +68,19 @@
       (declare (inline serial2))
       (declare ((simple-array eqv) eqvs))
       (loop with j
-         do (progn
-              (setq j (eqv-serial (aref eqvs p)))
-              (when-bind (s (bsearch j r k))
-                (psetf (aref cands r) c
-                       r (1+ s)
-                       c (make-cand :serial1 i
-                                    :serial2 j
-                                    :previous (aref cands s)))
-                (when (= s k)
-                  (psetf (aref cands (+ k 2)) (aref cands (1+ k)) ; move fence
-                         k (1+ k))
-                  (return)))
-              (if (eqv-lastp (aref eqvs p)) (return) (incf p))))
+         do
+         (setq j (eqv-serial (aref eqvs p)))
+         (when-bind (s (bsearch j r k))
+           (psetf (aref cands r) c
+                  r              (1+ s)
+                  c              (make-cand :serial1 i
+                                            :serial2 j
+                                            :previous (aref cands s)))
+           (when (= s k)
+             (psetf (aref cands (+ k 2)) (aref cands (1+ k)) ; move fence
+                    k                    (1+ k))
+             (return)))
+         (if (eqv-lastp (aref eqvs p)) (return) (incf p)))
       (setf (aref cands r) c)
       k)))
 
