@@ -1,6 +1,7 @@
 (defun com-seq (f1 f2)
   "Find the indexes of the longest common subsequence between the
-files f1 and f2 represented as arrays.  This algorithm is O(mn)."
+files f1 and f2 represented as arrays using simple recursion.  This
+algorithm is O(mn) in time and in space."
   (labels ((iter (i j)
              (cond ((or (minusp i) (minusp j))
                     (values (list (cons 0 0))
