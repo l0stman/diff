@@ -104,7 +104,7 @@
         (setf (aref seq (cand-serial1 c)) (cand-serial2 c)))
       ;; Weed out jackpots.
       (loop with len = (1+ (length f1))
-         for i from 0 to len
+         for i upto len
          when (or (zerop i)
                   (= i len)
                   (and (plusp (aref seq i))
