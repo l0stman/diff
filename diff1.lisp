@@ -62,10 +62,12 @@ equal."
 ;;; K exists when either I or J is reduced.
 
 (defun mergec (cands k i eqvs p)
-  "Return the index of the last filled element of CANDS which is
-initially equal to K. I is the current index in FILE1 and EQVS is the
-equivalence classes of FILE2.  P is the index in EQVS of the first
-element of a class of lines in FILE2 equivalent to line I of FILE1."
+  "Add to the array of candidates CANDS all the r-candidates such that
+0 <= R <= K and return the index of the last filled element of CANDS
+which is initially equal to K.  I is the current index in FILE1 and
+EQVS is the equivalence classes of FILE2.  P is the index in EQVS of
+the first element of a class of lines in FILE2 equivalent to line I of
+FILE1."
   (declare (optimize speed))
   (declare ((simple-array cand) cands))
   (let ((r 0)
