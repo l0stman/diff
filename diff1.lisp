@@ -70,25 +70,25 @@ the first element of a class of lines in FILE2 equivalent to line I of
 FILE1."
   (declare (optimize speed))
   (declare ((simple-array cand) cands))
-  (let ((r 0)
-        (c (aref cands 0)))             ; last r-candidate found
-    (labels ((serial2 (s)
-               (cand-serial2 (aref cands s)))
-             (bsearch (j min max)
-               ;; Find an element S such that SERIAL2(S) < J and
-               ;; SERIAL2(S+1) > J.
-               (declare (fixnum min max))
-               (loop
-                  do (if (> min max)
-                         (return-from bsearch nil)
-                         (let ((mid (ash (+ min max) -1)))
-                           (cond ((and (< (serial2 mid) j)
-                                       (> (serial2 (1+ mid)) j))
-                                  (return-from bsearch mid))
-                                 ((>= (serial2 mid) j) (setq max (1- mid)))
-                                 (t (setq min (1+ mid)))))))))
-      (declare (inline serial2))
-      (declare ((simple-array eqv) eqvs))
+  (labels ((serial2 (s)
+             (cand-serial2 (aref cands s)))
+           (bsearch (j min max)
+             ;; Find an element S such that SERIAL2(S) < J and
+             ;; SERIAL2(S+1) > J.
+             (declare (fixnum min max))
+             (loop
+                do (if (> min max)
+                       (return-from bsearch nil)
+                       (let ((mid (ash (+ min max) -1)))
+                         (cond ((and (< (serial2 mid) j)
+                                     (> (serial2 (1+ mid)) j))
+                                (return-from bsearch mid))
+                               ((>= (serial2 mid) j) (setq max (1- mid)))
+                               (t (setq min (1+ mid)))))))))
+    (declare (inline serial2))
+    (declare ((simple-array eqv) eqvs))
+    (let ((r 0)
+          (c (aref cands 0)))           ; last r-candidate found
       (loop with j
          do
          (setq j (eqv-serial (aref eqvs p)))
@@ -103,8 +103,8 @@ FILE1."
                     k                    (1+ k))
              (return)))
          (if (eqv-lastp (aref eqvs p)) (return) (incf p)))
-      (setf (aref cands r) c)
-      k)))
+      (setf (aref cands r) c))
+    k))
 
 (defun k-candidates (f1 f2)
   "Return \(VALUES CANDS K) where CANDS is the array r-candidates
