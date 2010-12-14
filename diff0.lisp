@@ -33,6 +33,7 @@ algorithm is O(mn) in time and in space."
                (return arr)))))
 
 (defun diff (file1 file2)
+  "Compare files line by line."
   (let ((f1 (file->arr file1))
         (f2 (file->arr file2)))
     (flet ((print-lines (file from to prefix)
