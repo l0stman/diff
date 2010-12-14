@@ -55,14 +55,19 @@ equal."
   (serial2 0 :type fixnum)
   (previous nil :type (or cand null)))
 
+;;; A k-candidate is pair of serials I and J such that the lines
+;;; number I of FILE1 and number J of FILE2 are equals, the longest
+;;; common subsequence of the first I lines of FILE1 and the first J
+;;; lines of FILE2 has K elements and no common subsequence of length
+;;; K exists when either I or J is reduced.
+
 (defun mergec (cands k i eqvs p)
+  "Return the index of the last filled element of CANDS which is
+initially equal to K. I is the current index in FILE1 and EQVS is the
+equivalence classes of FILE2.  P is the index in EQVS of the first
+element of a class of lines in FILE2 equivalent to line I of FILE1."
   (declare (optimize speed))
   (declare ((simple-array cand) cands))
-  ;; A r-candidate is pair of serials I and J such that the lines
-  ;; number I of FILE1 and number J of FILE2 are equals, the
-  ;; longest common subsequence of the first I lines of FILE1 and
-  ;; the first J lines of FILE2 has R elements and no common
-  ;; subsequence of length R exists when either I or J is reduced.
   (let ((r 0)
         (c (aref cands 0)))             ; last r-candidate found
     (labels ((serial2 (s)
