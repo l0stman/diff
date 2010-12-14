@@ -9,7 +9,7 @@
 (defun assoc-eqv-class (f1 f2)
   "Return (VALUES EQVS P) where EQVS is the equivalence classes of
 lines in F2 and P is an array such that for each line I of F1, P[I] is
-equal to the serial of the last line in an equivalence class equal to
+equal to the serial of the first line in an equivalence class equal to
 line I, or 0 otherwise.  All the elements of an equivalence class are
 equal."
   (let ((lines (make-array (length f2))))
@@ -68,8 +68,8 @@ equal."
     (labels ((serial2 (s)
                (cand-serial2 (aref cands s)))
              (bsearch (j min max)
-               ;; Find an element s such that CANDS[s] < j and
-               ;; CANDS[s+1] > j.
+               ;; Find an element S such that SERIAL2(S) < J and
+               ;; SERIAL2(S+1) > J.
                (declare (fixnum min max))
                (loop
                   do (if (> min max)
