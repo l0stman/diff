@@ -1,0 +1,10 @@
+This is an implementation of the standard Unix tool diff in Common
+Lisp.  The diff0.lisp file uses a simple but inefficient recursive
+algorithm which is O(nm) in time and space to find the longest common
+subsequence between two files.  The diff1.lisp file implements the
+algorithm described in ``An algorithm for differential file
+comparison'' by J. W. Hunt and M. D. McIllroy which worst case
+behavior is O(mnlog m) in time and O(mn) in space.  But in practice
+the complexity is linear in both time and space.
+
+See: http://www.cs.dartmouth.edu/~doug/diff.ps
