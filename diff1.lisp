@@ -107,14 +107,15 @@ common subsequence of length k exists when either i or j is reduced."
           ((null c) (setf (aref seq (1+ (length f1))) (1+ (length f2))))
         (setf (aref seq (cand-serial1 c)) (cand-serial2 c)))
       ;; Weed out jackpots.
-      (loop with len = (1+ (length f1))
-         for i upto len
-         when (or (zerop i)
-                  (= i len)
-                  (and (plusp (aref seq i))
-                       (string= (aref f1 (1- i))
-                                (aref f2 (1- (aref seq i))))))
-         collect (cons i (aref seq i))))))
+      (flet ((make-pos (i) (cons i (aref seq i))))
+        (do ((len (1+ (length f1)))
+             (res (list (make-pos 0)))
+             (i 1 (1+ i)))
+            ((= i len) (nreverse (cons (make-pos len) res)))
+          (when (and (plusp (aref seq i))
+                     (string= (aref f1 (1- i))
+                              (aref f2 (1- (aref seq i)))))
+            (push (make-pos i) res)))))))
 
 (defmacro aif (pred then &optional else)
   `(let ((it ,pred))
