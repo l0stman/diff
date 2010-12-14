@@ -7,6 +7,11 @@
   (lastp t :type boolean))
 
 (defun assoc-eqv-class (f1 f2)
+  "Return (VALUES EQVS P) where EQVS is the equivalence classes of
+lines in F2 and P is an array such that for each line I of F1, P[I] is
+equal to the serial of the last line in an equivalence class equal to
+line I, or 0 otherwise.  All the elements of an equivalence class are
+equal."
   (let ((lines (make-array (length f2))))
     (dotimes (i (length f2))
       (setf (aref lines i)
@@ -25,6 +30,8 @@
                                    (/= (line-hash (aref lines i))
                                        (line-hash (aref lines (1+ i))))))))
       (flet ((bsearch (h)
+               ;; Find the last element of the equivalence class whose
+               ;; hash is H.
                (do ((min 0) (max (1- (length lines))))
                    ((> min max) 0)
                  (let* ((mid (ash (+ min max) -1))
