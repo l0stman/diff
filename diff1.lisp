@@ -108,6 +108,7 @@ common subsequence of length k exists when either i or j is reduced."
           (setq k (mergec cands k (1+ i) eqvs (aref P i))))))))
 
 (defun com-seq (f1 f2)
+  "Return the longest common subsequence between the files."
   (multiple-value-bind (cands k) (k-candidates f1 f2)
     (let ((seq (make-array (+ (length f1) 2) :element-type 'fixnum)))
       (do ((c (aref cands k) (cand-previous c)))
