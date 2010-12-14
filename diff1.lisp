@@ -85,6 +85,10 @@
       k)))
 
 (defun k-candidates (f1 f2)
+  "A k-candidate is pair of serials i and j such that the lines number
+i of f1 and number j of f2 are equals, the longest common subsequence
+of the first i lines of f1 and the first j lines has k elements and no
+common subsequence of length k exists when either i or j is reduced."
   (multiple-value-bind (eqvs P) (assoc-eqv-class f1 f2)
     (let* ((len1 (length f1))
            (len2 (length f2))
