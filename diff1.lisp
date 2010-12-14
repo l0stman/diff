@@ -58,10 +58,18 @@ equal."
 (defun mergec (cands k i eqvs p)
   (declare (optimize speed))
   (declare ((simple-array cand) cands))
-  (let ((r 0) (c (aref cands 0)))
+  ;; A r-candidate is pair of serials I and J such that the lines
+  ;; number I of FILE1 and number J of FILE2 are equals, the
+  ;; longest common subsequence of the first I lines of FILE1 and
+  ;; the first J lines of FILE2 has R elements and no common
+  ;; subsequence of length R exists when either I or J is reduced.
+  (let ((r 0)
+        (c (aref cands 0)))             ; last r-candidate found
     (labels ((serial2 (s)
                (cand-serial2 (aref cands s)))
              (bsearch (j min max)
+               ;; Find an element s such that CANDS[s] < j and
+               ;; CANDS[s+1] > j.
                (declare (fixnum min max))
                (loop
                   do (if (> min max)
@@ -92,10 +100,6 @@ equal."
       k)))
 
 (defun k-candidates (f1 f2)
-  "A k-candidate is pair of serials i and j such that the lines number
-i of f1 and number j of f2 are equals, the longest common subsequence
-of the first i lines of f1 and the first j lines has k elements and no
-common subsequence of length k exists when either i or j is reduced."
   (multiple-value-bind (eqvs P) (assoc-eqv-class f1 f2)
     (let* ((len1 (length f1))
            (len2 (length f2))
