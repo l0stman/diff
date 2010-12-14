@@ -107,6 +107,8 @@ FILE1."
       k)))
 
 (defun k-candidates (f1 f2)
+  "Return \(VALUES CANDS K) where CANDS is the array r-candidates
+for 0 <= r <= K."
   (multiple-value-bind (eqvs P) (assoc-eqv-class f1 f2)
     (let* ((len1 (length f1))
            (len2 (length f2))
