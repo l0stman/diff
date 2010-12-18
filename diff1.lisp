@@ -30,7 +30,7 @@ equal."
                                    (/= (line-hash (aref lines i))
                                        (line-hash (aref lines (1+ i))))))))
       (flet ((bsearch (h)
-               ;; Find the last element of the equivalence class whose
+               ;; Find the first element of the equivalence class whose
                ;; hash is H.
                (do ((min 0) (max (1- (length lines))))
                    ((> min max) 0)
